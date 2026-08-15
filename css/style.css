@@ -250,6 +250,68 @@ h3 {
   transform: translateY(-6px) rotate(-45deg);
 }
 
+/* Theme toggle button */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0.35rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid rgba(213, 179, 108, 0.16);
+  outline-offset: 2px;
+}
+
+.theme-toggle .icon {
+  display: block;
+}
+
+.theme-toggle .icon-moon {
+  display: block;
+}
+
+.theme-toggle .icon-sun {
+  display: none;
+}
+
+/* Light theme variables and overrides */
+html[data-theme="light"] {
+  --bg: #ffffff;
+  --bg-elevated: #f7f8fb;
+  --bg-soft: #f2f5f9;
+  --panel: rgba(255, 255, 255, 0.96);
+  --panel-strong: #ffffff;
+  --card: #ffffff;
+  --card-alt: #fbfdff;
+  --text: #0b1115;
+  --muted: #4a5568;
+  --accent: #1f6feb;
+  --accent-strong: #2563eb;
+  --line: rgba(2, 6, 23, 0.06);
+  --line-strong: rgba(2, 6, 23, 0.12);
+  --shadow: 0 14px 30px rgba(2, 6, 23, 0.06);
+}
+
+html[data-theme="light"] body {
+  background: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+  color: var(--text);
+}
+
+html[data-theme="light"] .theme-toggle .icon-moon {
+  display: none;
+}
+
+html[data-theme="light"] .theme-toggle .icon-sun {
+  display: block;
+}
+
 .hero {
   padding-top: var(--space-3xl);
 }
