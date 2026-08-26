@@ -20,7 +20,7 @@ const projectDetails = {
     title: 'School Management System',
     description:
       'A school operations project focused on managing key administrative records and improving how daily tasks and information are organized.',
-    image: 'assets/images/projects/project-school.jpg',
+    image: 'assets/images/projects/project-featured.jpg',
     tags: ['Admin', 'Workflow', 'Data']
   },
   'group-registration': {
@@ -28,7 +28,7 @@ const projectDetails = {
     title: 'Student / Group Registration System',
     description:
       'A registration-focused project for simplifying data capture, coordination and user onboarding in a structured system.',
-    image: 'assets/images/projects/project-registration.jpg',
+    image: 'assets/images/projects/project-registration.jpeg',
     tags: ['Forms', 'Registration', 'Records']
   },
   'mediexpert': {
@@ -201,11 +201,12 @@ const modalTitle = document.getElementById('modal-title');
 const modalDescription = document.getElementById('modal-description');
 const modalTags = document.getElementById('modal-tags');
 const modalCloseButton = document.querySelector('.modal-close');
+let lastFocusedElement = null;
 
 const openProjectModal = (projectKey) => {
   const project = projectDetails[projectKey];
 
-  if (!modal || !project) {
+  if (!modal || !project || !modalImage || !modalNumber || !modalTitle || !modalDescription || !modalTags) {
     return;
   }
 
@@ -217,6 +218,9 @@ const openProjectModal = (projectKey) => {
   modalTags.innerHTML = project.tags.map((tag) => `<li>${tag}</li>`).join('');
   modal.classList.add('is-open');
   modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+  lastFocusedElement = document.activeElement;
+  modalCloseButton?.focus();
 };
 
 const closeProjectModal = () => {
@@ -226,10 +230,15 @@ const closeProjectModal = () => {
 
   modal.classList.remove('is-open');
   modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+  lastFocusedElement?.focus();
+  lastFocusedElement = null;
 };
 
 const setupProjectModal = () => {
   const triggerButtons = document.querySelectorAll('.project-trigger');
+  const getModalFocusableElements = () =>
+    modal?.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])') || [];
 
   triggerButtons.forEach((button) => {
     button.addEventListener('click', () => {
@@ -251,8 +260,31 @@ const setupProjectModal = () => {
   }
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && modal && modal.classList.contains('is-open')) {
+    if (!modal || !modal.classList.contains('is-open')) {
+      return;
+    }
+
+    if (event.key === 'Escape') {
       closeProjectModal();
+      return;
+    }
+
+    if (event.key === 'Tab') {
+      const focusableElements = [...getModalFocusableElements()];
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (!firstElement || !lastElement) {
+        return;
+      }
+
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
     }
   });
 };
@@ -269,7 +301,12 @@ const applyTheme = (theme) => {
 };
 
 const initTheme = () => {
-  const stored = localStorage.getItem('theme');
+  let stored = null;
+  try {
+    stored = localStorage.getItem('theme');
+  } catch (e) {
+    // storage may be unavailable
+  }
   const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
   const initial = stored || (prefersLight ? 'light' : 'dark');
   applyTheme(initial);

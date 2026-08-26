@@ -49,9 +49,9 @@ codewithmhan/
 Update these items before publishing:
 
 1. Profile photo
-   - Replace `assets/images/profile/steve.jpg`
+   - Replace `assets/images/profile/stephen.png`
 2. About photo
-   - Replace `assets/images/profile/steve-about.jpg`
+   - Replace `assets/images/profile/stephen pro.jpg`
 3. Project images
    - Replace all files in `assets/images/projects/`
 4. Project descriptions
